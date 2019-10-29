@@ -1,0 +1,132 @@
+SETUP FOR SERVER USE 
+
+STEP 1: Create a new file, include the following-
+        server.js
+        admin.js (file from previous classes)
+        cmdHistory.tst (for records keeping)
+
+
+STEP 2: Install and setup the following on the file's cmd
+        npm init - name: (ex) 107session2 (no uppercase)
+                   version: 1.0.0 (whatever you like)
+                   description: whatever necessary
+                   entry point: server.js (server's file name)
+                   test command: LEAVE BLANK
+                   git repository: LEAVE BLANK 
+                   keywords: LEAVE BLANK 
+                   author: enter your name if desired
+                   license: LEAVE BLANK 
+            Is this OK? (Y) yes 
+        
+        npm install express --save
+
+        np install nodemon --save 
+                after this is done, remember to always use nodemon (server to be run) in cmd 
+
+
+STEP 3: in server.js, write the following code:
+
+        var http = require("http");
+        var express = require("express");
+
+        var app = express();
+                -VERIFY THIS WORKS BY RUNNING IN CMD 
+
+
+STEP 4: package.js and package-lock.js should have already been isntalled by now, but if it isn't go ahead and copy and paste it in.
+
+STEP 5: Enable CORS security with the following:
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+
+        -this essentially allows everyone to access the innards of my computer
+
+STEP 5.2: also install:
+	npm install express --save
+	npm install nodemon -- save (automates server updates without having to restart anything)
+	npm install nodemon --global -- save
+	npm install ejs --save
+	npm install body-parser --save
+
+STEP 6: The rest is entirely up to you, how you want things to work. The following codes listed have been used for FSDI 107 Session 2, and are explained in further detail here:
+
+
+**On the main page, using the Request/Respond function, send what's in ("")
+**The beauty of this is that it allows you to use CSS here without calling upon it from a previously established CSS file, as seen below.
+
+app.get("/",function(req,res){
+    res.send("<h1 style='color:darkblue'>Hello from my own Server</h1>");
+})
+
+
+
+**On the contact page, using the Request/Respond function, send the following information in ("")
+
+app.get("/contact", function (req, res) {
+    res.send("My contact info is 808-888-9148, william.i.reediv@gmail.com")
+})
+
+app.get("/about", function (req, res){
+    res.send("My name is William, the fourth of my name");
+})
+
+
+**Below is calling a local server port to be utilized for this class.
+**In other words, I'm turning part of my computer into a server to simulate client to server communications. Keep in mind, this same code can be used for any server, theoretically.
+
+
+app.listen(8080, function () {
+    console.log("<Server running at http://localhost:8080");
+});
+
+**local IP Address: 127..0.0.1 = my machine
+**8080 = a local port
+
+
+**this forces the computer to read req body as an obj
+**With this, the server can read data that the client is sending to the server. And effectively, us as well.
+**body-parser is used so that the server can read JSON files properly.
+
+var bodyParser = require("body-parser");
+app.use(bodyParser.json()); //using the body-Parser to read JSON files
+
+
+**The purpose of the below code is to read all items that come in from the form used in admin.js from FSDI 106 Competency report.
+** The admin.js is utilized in order to save time and energy, for now. 
+**The code below also makes it to where all the data coming in from that file not only shows up as part of an array, but also numbers each set of information that is received.
+
+//*API FUNCTIONALITY*/
+var items = [];
+var count = 0;
+
+app.get('/api/products', function (req,res){
+    console.log("User wants the catalog");
+
+    res.json(items);
+});
+
+app.post('/api/products', function (req,res){
+    console.log("User wants to save item");
+
+    var item = req.body;//contains object the client sends
+    console.log(item);
+
+    //assign unique id
+    item.id = count;
+    count+= 1;
+
+    items.push(item);//this pushes array
+
+    res.json(item);
+
+
+    res.send("OK");
+});
+
+
+
+
